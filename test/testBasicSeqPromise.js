@@ -3,7 +3,7 @@
  */
 var test = require('unit.js'),
     lib = require('./lib'),
-    Promise = require('../src/promise');
+    Promise = require('../src/Promise');
 
 describe('Test Basic Sequenced Promise', function () {
     it('Test two fulfilled promise seq with both hooks', function (done) {

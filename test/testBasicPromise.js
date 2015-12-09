@@ -3,7 +3,7 @@
  */
 var test = require('unit.js'),
     lib = require('./lib'),
-    Promise = require('../src/promise');
+    Promise = require('../src/Promise');
 
 describe('Test Basic Promise', function () {
     it('Fulfilled Promise', function (done) {

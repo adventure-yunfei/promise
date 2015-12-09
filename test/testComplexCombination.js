@@ -3,7 +3,7 @@
  */
 var test = require('unit.js'),
     lib = require('./lib'),
-    Promise = require('../src/promise');
+    Promise = require('../src/Promise');
 
 describe('Test Complex Promise Combination', function () {
     it('Test Promise Combination with: multi-bind for the same promise, thenable hook, reject by error, seq', function (done) {

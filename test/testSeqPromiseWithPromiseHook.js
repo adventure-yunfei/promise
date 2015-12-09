@@ -3,7 +3,7 @@
  */
 var test = require('unit.js'),
     lib = require('./lib'),
-    Promise = require('../src/promise');
+    Promise = require('../src/Promise');
 
 describe('Test Sequenced Promise provided with hook returning promise (or thenable)', function () {
     it('Test promise with hooks returning promise or thenable', function (done) {
