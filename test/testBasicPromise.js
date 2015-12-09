@@ -2,6 +2,7 @@
  * Created by yunfei on 9/9/15.
  */
 var test = require('unit.js'),
+    lib = require('./lib'),
     Promise = require('../src/promise');
 
 describe('Test Basic Promise', function () {
@@ -16,10 +17,7 @@ describe('Test Basic Promise', function () {
                 done();
             }, 0);
         }, function () {
-            setTimeout(function () {
-                test.assert(false);
-                done();
-            }, 0);
+            lib.failTest(done);
         });
     });
 
@@ -29,13 +27,23 @@ describe('Test Basic Promise', function () {
             });
 
         p.then(function () {
-            setTimeout(function () {
-                test.assert(false);
-                done();
-            }, 0);
+            lib.failTest(done);
         }, function (reason) {
             setTimeout(function () {
                 test.assert.equal(reason, 'rejected');
+                done();
+            }, 0);
+        });
+    });
+
+    it('Rejected Promise (rejected by error)', function (done) {
+        (new Promise(function () {
+            throw new Error('by exception');
+        })).then(function () {
+            lib.failTest(done);
+        }, function (reason) {
+            setTimeout(function () {
+                test.assert.equal(reason.message, 'by exception');
                 done();
             }, 0);
         });
@@ -50,7 +58,7 @@ describe('Test Basic Promise', function () {
         p.then(function (value) {
             firstOutput = value;
         }, function () {
-            firstOutput = 'NOT_WANTED';
+            lib.failTest(done);
         });
 
         p.then(function (value) {
@@ -60,10 +68,7 @@ describe('Test Basic Promise', function () {
                 done();
             }, 0);
         }, function () {
-            setTimeout(function () {
-                test.assert(false);
-                done();
-            }, 0);
+            lib.failTest(done);
         });
     });
 
@@ -75,19 +80,13 @@ describe('Test Basic Promise', function () {
             firstOutput;
 
         p.then(function () {
-            setTimeout(function () {
-                test.assert(false);
-                done();
-            }, 0);
+            lib.failTest(done);
         }, function (reason) {
             firstOutput = reason;
         });
 
         p.then(function () {
-            setTimeout(function () {
-                test.assert(false);
-                done();
-            }, 0);
+            lib.failTest(done);
         }, function (reason) {
             setTimeout(function () {
                 test.assert.equal(firstOutput, rejectedObj);
@@ -103,10 +102,7 @@ describe('Test Basic Promise', function () {
         });
 
         p.then(function () {
-            setTimeout(function () {
-                test.assert(false);
-                done();
-            }, 0);
+            lib.failTest(done);
         }, function (reason) {
             setTimeout(function () {
                 test.assert.equal(reason, 'rejected');
