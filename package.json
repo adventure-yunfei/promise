@@ -1,0 +1,26 @@
+{
+  "name": "promise",
+  "version": "1.0.0",
+  "description": "Implementation of javascript Promise",
+  "main": "promise.js",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adventure-yunfei/promise.git"
+  },
+  "keywords": [
+    "promise"
+  ],
+  "author": "yunfei",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/adventure-yunfei/promise/issues"
+  },
+  "homepage": "https://github.com/adventure-yunfei/promise#readme",
+  "devDependencies": {
+    "mocha": "^2.3.4",
+    "unit.js": "^2.0.0"
+  }
+}
