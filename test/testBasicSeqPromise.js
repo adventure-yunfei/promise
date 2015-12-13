@@ -1,14 +1,14 @@
 /**
  * Created by yunfei on 12/9/15.
  */
-var test = require('unit.js'),
-    lib = require('./lib'),
-    Promise = require('../src/Promise');
+import test from 'unit.js';
+import lib from './lib';
+import Promise from '../src/Promise';
 
-describe('Test Basic Sequenced Promise', function () {
-    it('Test two fulfilled promise seq with both hooks', function (done) {
+describe('Test Basic Sequenced Promise', () => {
+    it('Test two fulfilled promise seq with both hooks', (done) => {
         var output = [];
-        (new Promise(function (resolve) {
+        (new Promise((resolve) => {
             resolve('resolved promise');
         })).then(function onFulfilled(value) {
             output.push(value);
@@ -17,7 +17,7 @@ describe('Test Basic Sequenced Promise', function () {
             output.push(lib.FAIL);
         }).then(function onFulfilled(value) {
             output.push(value);
-            setTimeout(function () {
+            setTimeout(() => {
                 test.array(output).is(['resolved promise', 'seq resolved']);
                 done();
             }, 0);
@@ -26,9 +26,9 @@ describe('Test Basic Sequenced Promise', function () {
         });
     });
 
-    it('Test two rejected promise seq with both hooks (second rejected by error)', function (done) {
+    it('Test two rejected promise seq with both hooks (second rejected by error)', (done) => {
         var output = [];
-        (new Promise(function (resolve, reject) {
+        (new Promise((resolve, reject) => {
             reject('rejected promise');
         })).then(function onFulfilled() {
             output.push(lib.FAIL);
@@ -39,29 +39,29 @@ describe('Test Basic Sequenced Promise', function () {
             output.push(lib.FAIL);
         }, function onRejected(reason) {
             output.push(reason.message);
-            setTimeout(function () {
+            setTimeout(() => {
                 test.array(output).is(['rejected promise', 'seq rejected by exception']);
                 done();
             }, 0);
         });
     });
 
-    it('Test promise seq with random hooks', function (done) {
+    it('Test promise seq with random hooks', (done) => {
         var output = [];
-        (new Promise(function (resolve) {
+        (new Promise((resolve) => {
             resolve('resolved');
-        })).then(null, function () {output.push(lib.FAIL);})
-            .then(function (value) {output.push(value); return 'second resolved'; }, null)
-            .then(null, function () {output.push(lib.FAIL);})
-            .then(null, function () {output.push(lib.FAIL);})
-            .then(function (value) {output.push(value); throw new Error('third rejected');}, function () {output.push(lib.FAIL);})
-            .then(function () {output.push(lib.FAIL);}, null)
-            .then(null, function (reason) {
+        })).then(null, () => {output.push(lib.FAIL);})
+            .then((value) => {output.push(value); return 'second resolved'; }, null)
+            .then(null, () => {output.push(lib.FAIL);})
+            .then(null, () => {output.push(lib.FAIL);})
+            .then((value) => {output.push(value); throw new Error('third rejected');}, () => {output.push(lib.FAIL);})
+            .then(() => {output.push(lib.FAIL);}, null)
+            .then(null, (reason) => {
                 output.push(reason.message);
-                setTimeout(function () {
+                setTimeout(() => {
                     test.array(output).is(['resolved', 'second resolved', 'third rejected']);
                     done();
                 }, 0);
-            }).then(function () {lib.failTest(500);}, function () {lib.failTest(500);});
+            }).then(() => {lib.failTest(500);}, () => {lib.failTest(500);});
     });
 });

@@ -1,43 +1,43 @@
 /**
  * Created by yunfei on 12/9/15.
  */
-var test = require('unit.js'),
-    lib = require('./lib'),
-    Promise = require('../src/Promise');
+import test from 'unit.js';
+import lib from './lib';
+import Promise from '../src/Promise';
 
-describe('Test Sequenced Promise provided with hook returning promise (or thenable)', function () {
-    it('Test promise with hooks returning promise or thenable', function (done) {
+describe('Test Sequenced Promise provided with hook returning promise (or thenable)', () => {
+    it('Test promise with hooks returning promise or thenable', (done) => {
         var output = [];
-        (new Promise(function (resolve) {
+        (new Promise((resolve) => {
             resolve('resolved promise');
         })).then(function onFulfilled(value) {
                 output.push(value);
-                return new Promise(function (resolve, reject) {
+                return new Promise((resolve, reject) => {
                     reject('second rejected');
                 });
             }, function onRejected() {output.push(lib.FAIL);})
             .then(function onFulfilled() {output.push(lib.FAIL);}, function onRejected(reason) {
                 output.push(reason);
                 return {
-                    then: function (success, fail) {
+                    then: (success, fail) => {
                         fail('third rejected');
                     }
                 };
             })
-            .then(null, function (reason) {
+            .then(null, (reason) => {
                 output.push(reason);
                 return {
                     then: 'resolved: wrong thenable object'
                 };
             })
-            .then(function (value) {
+            .then((value) => {
                 output.push(value.then);
-                setTimeout(function () {
+                setTimeout(() => {
                     test.array(output)
                         .is(['resolved promise', 'second rejected', 'third rejected', 'resolved: wrong thenable object']);
                     done();
                 }, 0);
             }, null)
-            .then(function () {lib.failTest(500);}, function () {lib.failTest(500);});
+            .then(() => {lib.failTest(500);}, () => {lib.failTest(500);});
     });
 });

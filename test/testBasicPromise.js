@@ -1,94 +1,94 @@
 /**
  * Created by yunfei on 9/9/15.
  */
-var test = require('unit.js'),
-    lib = require('./lib'),
-    Promise = require('../src/Promise');
+import test from 'unit.js';
+import lib from './lib';
+import Promise from '../src/Promise';
 
-describe('Test Basic Promise', function () {
-    it('Fulfilled Promise', function (done) {
-        var p = new Promise(function (resolve) {
+describe('Test Basic Promise', () => {
+    it('Fulfilled Promise', (done) => {
+        var p = new Promise((resolve) => {
                 resolve('resolved');
             });
 
-        p.then(function (value) {
-            setTimeout(function () {
+        p.then((value) => {
+            setTimeout(() => {
                 test.assert.equal(value, 'resolved');
                 done();
             }, 0);
-        }, function () {
+        }, () => {
             lib.failTest(done);
         });
     });
 
-    it('Rejected Promise', function (done) {
-        var p = new Promise(function (resolve, reject) {
+    it('Rejected Promise', (done) => {
+        var p = new Promise((resolve, reject) => {
                 reject('rejected');
             });
 
-        p.then(function () {
+        p.then(() => {
             lib.failTest(done);
-        }, function (reason) {
-            setTimeout(function () {
+        }, (reason) => {
+            setTimeout(() => {
                 test.assert.equal(reason, 'rejected');
                 done();
             }, 0);
         });
     });
 
-    it('Rejected Promise (rejected by error)', function (done) {
-        (new Promise(function () {
+    it('Rejected Promise (rejected by error)', (done) => {
+        (new Promise(() => {
             throw new Error('by exception');
-        })).then(function () {
+        })).then(() => {
             lib.failTest(done);
-        }, function (reason) {
-            setTimeout(function () {
+        }, (reason) => {
+            setTimeout(() => {
                 test.assert.equal(reason.message, 'by exception');
                 done();
             }, 0);
         });
     });
 
-    it('Fulfilled Promise with two "then" binding', function (done) {
-        var p = new Promise(function (resolve) {
+    it('Fulfilled Promise with two "then" binding', (done) => {
+        var p = new Promise((resolve) => {
                 resolve('resolved');
             }),
             firstOutput;
 
-        p.then(function (value) {
+        p.then((value) => {
             firstOutput = value;
-        }, function () {
+        }, () => {
             lib.failTest(done);
         });
 
-        p.then(function (value) {
-            setTimeout(function () {
+        p.then((value) => {
+            setTimeout(() => {
                 test.assert.equal(firstOutput, 'resolved');
                 test.assert.equal(value, 'resolved');
                 done();
             }, 0);
-        }, function () {
+        }, () => {
             lib.failTest(done);
         });
     });
 
-    it('Rejected Promise with two "then" binding', function (done) {
+    it('Rejected Promise with two "then" binding', (done) => {
         var rejectedObj = {a: 1},
-            p = new Promise(function (resolve, reject) {
+            p = new Promise((resolve, reject) => {
                 reject(rejectedObj);
             }),
             firstOutput;
 
-        p.then(function () {
+        p.then(() => {
             lib.failTest(done);
-        }, function (reason) {
+        }, (reason) => {
             firstOutput = reason;
         });
 
-        p.then(function () {
+        p.then(() => {
             lib.failTest(done);
-        }, function (reason) {
-            setTimeout(function () {
+        }, (reason) => {
+            setTimeout(() => {
                 test.assert.equal(firstOutput, rejectedObj);
                 test.assert.equal(reason, rejectedObj);
                 done();
@@ -96,15 +96,15 @@ describe('Test Basic Promise', function () {
         });
     });
 
-    it('Async Rejected Promise', function (done) {
-        var p = new Promise(function (resolve, reject) {
+    it('Async Rejected Promise', (done) => {
+        var p = new Promise((resolve, reject) => {
             setTimeout(reject('rejected'), 50);
         });
 
-        p.then(function () {
+        p.then(() => {
             lib.failTest(done);
-        }, function (reason) {
-            setTimeout(function () {
+        }, (reason) => {
+            setTimeout(() => {
                 test.assert.equal(reason, 'rejected');
                 done();
             }, 0);
