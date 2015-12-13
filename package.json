@@ -4,7 +4,7 @@
   "description": "Implementation of javascript Promise",
   "main": "promise.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha test"
+    "test": "mocha test --compilers js:babel/register"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/adventure-yunfei/promise#readme",
   "devDependencies": {
+    "babel": "^5.8.34",
     "mocha": "^2.3.4",
     "unit.js": "^2.0.0"
   }

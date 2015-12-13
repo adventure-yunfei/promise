@@ -1,49 +1,49 @@
 /**
  * Created by yunfei on 12/9/15.
  */
-var test = require('unit.js'),
-    lib = require('./lib'),
-    Promise = require('../src/Promise');
+import test from 'unit.js';
+import lib from './lib';
+import Promise from '../src/Promise';
 
-describe('Test Complex Promise Combination', function () {
-    it('Test Promise Combination with: multi-bind for the same promise, thenable hook, reject by error, seq', function (done) {
+describe('Test Complex Promise Combination', () => {
+    it('Test Promise Combination with: multi-bind for the same promise, thenable hook, reject by error, seq', (done) => {
         var output = [],
-            p = (new Promise(function (resolve, reject) {
-                setTimeout(function () {
+            p = (new Promise((resolve, reject) => {
+                setTimeout(() => {
                     reject('first rejected');
                 }, 20);
             }))
                 .then(null, null)
-                .then(function () {output.push(lib.FAIL);})
-                .then(null, function (reason) {
+                .then(() => {output.push(lib.FAIL);})
+                .then(null, (reason) => {
                     output.push(reason);
                     throw new Error('second rejected by exception');
                 })
                 .then(),
-            p2 = p.then(function () {output.push(lib.FAIL);}, function (reason) {output.push('p2: ' + reason.message);})
-                .then(function (value) {output.push(value ? lib.FAIL : 'p2: third resolved')}),
-            p3 = p.then(null, function (reason) {
+            p2 = p.then(() => {output.push(lib.FAIL);}, (reason) => {output.push('p2: ' + reason.message);})
+                .then((value) => {output.push(value ? lib.FAIL : 'p2: third resolved')}),
+            p3 = p.then(null, (reason) => {
                 output.push('p3: ' + reason.message);
-                return new Promise(function (resolve) {
-                    setTimeout(function () {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
                         resolve('p3: third resolved');
                     }, 20);
                 });
             })
-                .then(function (value) {
+                .then((value) => {
                     output.push(value);
                     return {
-                        then: function (onFulfilled) {
-                            setTimeout(function () {
+                        then: (onFulfilled) => {
+                            setTimeout(() => {
                                 onFulfilled('p3: forth resolved');
                             }, 20);
                         }
                     };
-                }, function () {output.push(lib.FAIL)})
-                .then(null, function () {output.push(lib.FAIL)})
-                .then(function (value) {
+                }, () => {output.push(lib.FAIL)})
+                .then(null, () => {output.push(lib.FAIL)})
+                .then((value) => {
                     output.push(value);
-                    setTimeout(function () {
+                    setTimeout(() => {
                         test.array(output).is([
                             'first rejected',
                             'p2: second rejected by exception',
@@ -55,6 +55,6 @@ describe('Test Complex Promise Combination', function () {
                         done();
                     }, 0);
                 })
-                .then(function () {lib.failTest(done, 1000);}, function () {lib.failTest(done, 1000);});
+                .then(() => {lib.failTest(done, 1000);}, () => {lib.failTest(done, 1000);});
     });
 });

@@ -1,12 +1,12 @@
 /**
  * Created by yunfei on 12/9/15.
  */
-var test = require('unit.js');
+import test from 'unit.js';
 
-module.exports = {
+export default {
     FAIL: '__fail__',
-    failTest: function (cb, timeout) {
-        setTimeout(function () {
+    failTest(cb, timeout) {
+        setTimeout(() => {
             test.assert(false);
             cb();
         }, timeout || 0);
