@@ -45,7 +45,8 @@ export default class Defer {
             onFulfilled && fulfilledHooks.push(onFulfilled);
             onRejected && rejectedHooks.push(onRejected);
         } else {
-            (state === STATE_FULFILLED ? onFulfilled : onRejected)(output);
+            const hook = (state === STATE_FULFILLED ? onFulfilled : onRejected);
+            hook && hook(output);
         }
     }
 }

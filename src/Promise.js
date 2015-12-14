@@ -9,9 +9,18 @@ export default class Promise {
     });
 
     constructor(fnResolver) {
+        let stateHasPropagated = false;
         const defer = new Defer(fnResolver);
+        defer.then(null, (reason) => {
+            setTimeout(() => {
+                if (!stateHasPropagated) {
+                    throw new Error(`Unhandled promise rejection: ${reason}`);
+                }
+            }, 1);
+        });
 
         this.then = (onFulfilled = null, onRejected = null) => {
+            stateHasPropagated = true;
             return new Promise((resolve, reject) => {
                 var handleDeferOutput = (hook, output, defaultHandler) => {
                     if (!hook) {
@@ -45,12 +54,16 @@ export default class Promise {
                 });
             });
         };
+
+        this.finally = (onFinally) => {
+            defer.then(onFinally, onFinally);
+            return this.then();
+        };
     }
 
     catch = (onRejected) => this.then(null, onRejected);
+}
 
-    finally = (onFinally) => {
-        this.then(onFinally, onFinally);
-        return this.then();
-    };
+if (typeof window !== 'undefined') {
+    window.Promise = Promise;
 }
