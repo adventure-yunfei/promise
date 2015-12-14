@@ -4,32 +4,39 @@ import gulpBabel from 'gulp-babel';
 import webpack from 'webpack';
 import yargs from 'yargs';
 import rimraf from 'rimraf';
+import runSequence from 'run-sequence';
 
 import makeWebpackConfig from './makeWebpackConfig';
 import {BUNDLE_DIR, ES6_COMPILE_DIR, SRC_DIR} from './constants';
 
 const args = yargs
-    .alias('p', 'production')
+    .alias('d', 'debug')
     .argv;
-const isDev = !args.production;
+const isDev = args.debug; // Debug mode, will produce uncompressed debug bundle, and watch src file changes
 
-
+/////////////////////////////////////
+// tasks to compile es6 to es5 code
 gulp.task('clean-es6-output', () => {
-    rimraf.sync(ES6_COMPILE_DIR);
+    rimraf.sync(`${ES6_COMPILE_DIR}/*`);
 });
-gulp.task('compile-es6', ['clean-es6-output'], () => {
+gulp.task('compile-es6', () => {
     return gulp.src(`${SRC_DIR}/**.js`)
         .pipe(gulpBabel())
         .pipe(gulp.dest(ES6_COMPILE_DIR));
 });
+gulp.task('watch-compile-es6', () => {
+    return gulp.watch(`${SRC_DIR}/**.js`, ['compile-es6']);
+});
 
+
+/////////////////////////////////////
+// tasks to produce one bundled file
 gulp.task('clean-bundle', () => {
     const webpackConfig = makeWebpackConfig(isDev);
     for (let key in webpackConfig.entry) {
         rimraf.sync(`${BUNDLE_DIR}/${key}*`);
     }
 });
-// task to produce one bundled file
 gulp.task('build-bundle', ['clean-bundle'], (done) => {
     webpack(makeWebpackConfig(isDev), (err, stats) => {
         var jsonStats = stats.toJson();
@@ -66,4 +73,4 @@ gulp.task('build-bundle', ['clean-bundle'], (done) => {
     });
 });
 
-gulp.task('default', ['build-bundle']);
+gulp.task('default', ['build-bundle', 'clean-es6-output', (isDev ? 'watch-compile-es6' : 'compile-es6')]);
