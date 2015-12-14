@@ -37,7 +37,6 @@ describe('Test Sequenced Promise provided with hook returning promise (or thenab
                         .is(['resolved promise', 'second rejected', 'third rejected', 'resolved: wrong thenable object']);
                     done();
                 }, 0);
-            }, null)
-            .then(() => {lib.failTest(500);}, () => {lib.failTest(500);});
+            }, null);
     });
 });

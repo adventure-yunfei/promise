@@ -62,6 +62,6 @@ describe('Test Basic Sequenced Promise', () => {
                     test.array(output).is(['resolved', 'second resolved', 'third rejected']);
                     done();
                 }, 0);
-            }).then(() => {lib.failTest(500);}, () => {lib.failTest(500);});
+            });
     });
 });

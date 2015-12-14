@@ -54,7 +54,6 @@ describe('Test Complex Promise Combination', () => {
                         ]);
                         done();
                     }, 0);
-                })
-                .then(() => {lib.failTest(done, 1000);}, () => {lib.failTest(done, 1000);});
+                });
     });
 });

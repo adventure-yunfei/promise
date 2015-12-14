@@ -4,7 +4,7 @@ export default class Promise {
     constructor(fnResolver) {
         const defer = new Defer(fnResolver);
 
-        this.then = (onFulfilled, onRejected) => {
+        this.then = (onFulfilled = null, onRejected = null) => {
             return new Promise((resolve, reject) => {
                 var handleDeferOutput = (hook, output, defaultHandler) => {
                     if (!hook) {
@@ -39,4 +39,11 @@ export default class Promise {
             });
         };
     }
+
+    catch = (onRejected) => this.then(null, onRejected);
+
+    finally = (onFinally) => {
+        this.then(onFinally, onFinally);
+        return this.then();
+    };
 }
