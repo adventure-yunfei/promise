@@ -1,6 +1,13 @@
 import Defer from './Defer';
 
 export default class Promise {
+    static resolve = (value) => new Promise((resolve) => {
+        resolve(value);
+    });
+    static reject = (reason) => new Promise((resolve, reject) => {
+        reject(reason);
+    });
+
     constructor(fnResolver) {
         const defer = new Defer(fnResolver);
 
