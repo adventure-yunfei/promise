@@ -1,9 +1,14 @@
 {
-  "name": "promise",
+  "name": "promise-aplus",
   "version": "1.0.0",
   "description": "Implementation of javascript Promise",
-  "main": "promise.js",
+  "files": [
+    "lib",
+    "bundles"
+  ],
+  "main": "lib/index.js",
   "scripts": {
+    "build": "gulp",
     "test": "mocha test --compilers js:babel/register"
   },
   "repository": {
@@ -11,7 +16,8 @@
     "url": "git+https://github.com/adventure-yunfei/promise.git"
   },
   "keywords": [
-    "promise"
+    "promise",
+    "Promise/A+"
   ],
   "author": "yunfei",
   "license": "MIT",

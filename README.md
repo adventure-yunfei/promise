@@ -1,2 +1,2 @@
-# promise
-Implementation of javascript Promise
+# Promise
+Implementation of javascript Promise/A+ standard.
