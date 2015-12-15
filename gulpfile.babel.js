@@ -5,6 +5,7 @@ import webpack from 'webpack';
 import yargs from 'yargs';
 import rimraf from 'rimraf';
 import runSequence from 'run-sequence';
+import eslint from 'gulp-eslint';
 
 import makeWebpackConfig from './makeWebpackConfig';
 import {BUNDLE_DIR, ES6_COMPILE_DIR, SRC_DIR} from './constants';
@@ -13,6 +14,15 @@ const args = yargs
     .alias('d', 'debug')
     .argv;
 const isDev = args.debug; // Debug mode, will produce uncompressed debug bundle, and watch src file changes
+
+/////////////////////////////////////
+// task for code style
+gulp.task('eslint', () => {
+    return gulp.src(['**/*.js','!node_modules/**'])
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
+});
 
 /////////////////////////////////////
 // tasks to compile es6 to es5 code

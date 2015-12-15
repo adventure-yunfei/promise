@@ -23,9 +23,12 @@
   "devDependencies": {
     "babel": "^5.8.34",
     "babel-core": "^5.8.34",
+    "babel-eslint": "^5.0.0-beta6",
     "babel-loader": "^5.4.0",
+    "eslint": "^1.10.3",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.3.0",
+    "gulp-eslint": "^1.1.1",
     "gulp-util": "^3.0.7",
     "rimraf": "^2.4.4",
     "run-sequence": "^1.1.5",
