@@ -4,7 +4,6 @@ import gulpBabel from 'gulp-babel';
 import webpack from 'webpack';
 import yargs from 'yargs';
 import rimraf from 'rimraf';
-import runSequence from 'run-sequence';
 import eslint from 'gulp-eslint';
 
 import makeWebpackConfig from './makeWebpackConfig';
@@ -18,7 +17,7 @@ const isDev = args.debug; // Debug mode, will produce uncompressed debug bundle,
 /////////////////////////////////////
 // task for code style
 gulp.task('eslint', () => {
-    return gulp.src(['**/*.js','!node_modules/**'])
+    return gulp.src(['**/*.js', '!node_modules/**', `!${BUNDLE_DIR}/**`, `!${ES6_COMPILE_DIR}/**`])
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failAfterError());
@@ -30,12 +29,12 @@ gulp.task('clean-es6-output', () => {
     rimraf.sync(`${ES6_COMPILE_DIR}/*`);
 });
 gulp.task('compile-es6', () => {
-    return gulp.src(`${SRC_DIR}/**.js`)
+    return gulp.src(`${SRC_DIR}/**/*.js`)
         .pipe(gulpBabel())
         .pipe(gulp.dest(ES6_COMPILE_DIR));
 });
 gulp.task('watch-compile-es6', () => {
-    return gulp.watch(`${SRC_DIR}/**.js`, ['compile-es6']);
+    return gulp.watch(`${SRC_DIR}/**/*.js`, ['compile-es6']);
 });
 
 
