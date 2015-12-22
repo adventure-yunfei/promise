@@ -8,6 +8,46 @@ export default class Promise {
         reject(reason);
     });
 
+    static all = (promises) => {
+        return new Promise((resolve, reject) => {
+            const resolvedValues = [];
+            let leftResolvedCnt = promises.length;
+            let finished = false;
+            promises.forEach((p, idx) => {
+                p.then((value) => {
+                    if (!finished) {
+                        resolvedValues[idx] = value;
+                        leftResolvedCnt--;
+                        if (leftResolvedCnt === 0) {
+                            resolve(resolvedValues);
+                            finished = true;
+                        }
+                    }
+                }, () => {
+                    if (!finished) {
+                        reject();
+                        finished = true;
+                    }
+                })
+            });
+        });
+    };
+
+    static race = (promises) => {
+        let finished = false;
+        const getHandler = (fnFinish) => (promiseOutput) => {
+            if (!finished) {
+                fnFinish(promiseOutput);
+                finished = true;
+            }
+        };
+        return new Promise((resolve, reject) => {
+            promises.forEach((p) => {
+                p.then(getHandler(resolve), getHandler(reject));
+            });
+        });
+    };
+
     constructor(fnResolver) {
         let stateHasPropagated = false;
         const defer = new Defer(fnResolver);
