@@ -1,6 +1,7 @@
 /**
  * Created by yunfei on 12/9/15.
  */
+import __assert__ from 'js-assert/__assert__';
 const STATE_PENDING = 1;
 const STATE_FULFILLED = 2;
 const STATE_REJECTED = 3;
@@ -12,6 +13,7 @@ export default class Defer {
     output = null;
 
     constructor(fnResolver) {
+        __assert__(typeof fnResolver === 'function', 'Defer constructor only accepts a function as input');
         try {
             fnResolver((value) => {
                 this.resolve(value);
@@ -40,6 +42,8 @@ export default class Defer {
     }
 
     then(onFulfilled, onRejected) {
+        __assert__(!onFulfilled || typeof onFulfilled === 'function', 'Defer.then: onFulfilled must be a function');
+        __assert__(!onRejected || typeof onRejected === 'function', 'Defer.then: onRejected must be a function');
         const {state, output, fulfilledHooks, rejectedHooks} = this;
         if (state === STATE_PENDING) {
             onFulfilled && fulfilledHooks.push(onFulfilled);

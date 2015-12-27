@@ -38,5 +38,8 @@
     "unit.js": "^2.0.0",
     "webpack": "^1.12.9",
     "yargs": "^3.31.0"
+  },
+  "dependencies": {
+    "js-assert": "0.0.2"
   }
 }

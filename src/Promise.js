@@ -1,3 +1,4 @@
+import __assert__ from 'js-assert/__assert__';
 import Defer from './Defer';
 
 export default class Promise {
@@ -9,6 +10,8 @@ export default class Promise {
     });
 
     static all = (promises) => {
+        __assert__(Array.isArray(promises), 'Promise.all only accepts an array as input');
+        __assert__(promises.every((p) => typeof p.then === 'function'), 'Promise.all only accepts an array of thenable object(promise) as input');
         return new Promise((resolve, reject) => {
             const resolvedValues = [];
             let leftResolvedCnt = promises.length;
@@ -34,6 +37,8 @@ export default class Promise {
     };
 
     static race = (promises) => {
+        __assert__(Array.isArray(promises), 'Promise.race only accepts an array as input');
+        __assert__(promises.every((p) => typeof p.then === 'function'), 'Promise.race only accepts an array of thenable object(promise) as input');
         let finished = false;
         const getHandler = (fnFinish) => (promiseOutput) => {
             if (!finished) {
@@ -49,6 +54,7 @@ export default class Promise {
     };
 
     constructor(fnResolver) {
+        __assert__(typeof fnResolver === 'function', 'Promise constructor only accepts a function as input');
         let stateHasPropagated = false;
         const defer = new Defer(fnResolver);
         defer.then(null, (reason) => {
@@ -60,6 +66,8 @@ export default class Promise {
         });
 
         this.then = (onFulfilled = null, onRejected = null) => {
+            __assert__(!onFulfilled || typeof onFulfilled === 'function', 'Promise.then: onFulfilled must be a function');
+            __assert__(!onRejected || typeof onRejected === 'function', 'Promise.then: onRejected must be a function');
             stateHasPropagated = true;
             return new Promise((resolve, reject) => {
                 var handleDeferOutput = (hook, output, defaultHandler) => {
@@ -96,12 +104,16 @@ export default class Promise {
         };
 
         this.finally = (onFinally) => {
+            __assert__(typeof onFinally === 'function', 'Promise.finally: onFinally must be a function');
             defer.then(onFinally, onFinally);
             return this.then();
         };
     }
 
-    catch = (onRejected) => this.then(null, onRejected);
+    catch = (onRejected) => {
+        __assert__(typeof onRejected === 'function', 'Promise.catch: onRejected must be a function');
+        return this.then(null, onRejected);
+    };
 }
 
 if (typeof window !== 'undefined') {
