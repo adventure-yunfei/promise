@@ -1,16 +1,16 @@
 {
-  "env": {
-    "es6": true
+//  "env": {
+//    "es6": true
 //    "commonjs": true,
 //    "amd": true
-  },
-//  "globals": {
-//    "console": false,
-//    "setTimeout": false,
-//    "clearTimeout": false,
-//    "setInterval": false,
-//    "clearInterval": false
 //  },
+  "globals": {
+//    "console": false,
+    "setTimeout": false,
+    "clearTimeout": false,
+    "setInterval": false,
+    "clearInterval": false
+  },
   "parser": "babel-eslint",
   "rules": {
     "brace-style": [2, "1tbs", {"allowSingleLine": true}],

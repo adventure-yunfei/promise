@@ -15,7 +15,7 @@ describe('Test Promise.resolve/reject shortcut', () => {
                 }, 0);
             }, () => {
                 lib.failTest(done);
-            })
+            });
     });
 
     it('Test Promise.reject', (done) => {
@@ -27,6 +27,6 @@ describe('Test Promise.resolve/reject shortcut', () => {
                     test.string(reason).is('rejected');
                     done();
                 }, 0);
-            })
+            });
     });
 });

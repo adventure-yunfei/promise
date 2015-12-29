@@ -31,7 +31,7 @@ export default class Promise {
                         reject();
                         finished = true;
                     }
-                })
+                });
             });
         });
     };
@@ -117,5 +117,6 @@ export default class Promise {
 }
 
 if (typeof window !== 'undefined') {
+    /* global window */
     window.Promise = Promise;
 }

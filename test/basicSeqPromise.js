@@ -34,7 +34,7 @@ describe('Test Basic Sequenced Promise', () => {
             output.push(lib.FAIL);
         }, function onRejected(reason) {
             output.push(reason);
-            throw new Error('seq rejected by exception')
+            throw new Error('seq rejected by exception');
         }).then(function onFulfilled() {
             output.push(lib.FAIL);
         }, function onRejected(reason) {

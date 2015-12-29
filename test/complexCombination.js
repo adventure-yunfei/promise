@@ -14,46 +14,52 @@ describe('Test Complex Promise Combination', () => {
                 }, 20);
             }))
                 .then(null, null)
-                .then(() => {output.push(lib.FAIL);})
+                .then(() => {
+                    output.push(lib.FAIL);
+                })
                 .then(null, (reason) => {
                     output.push(reason);
                     throw new Error('second rejected by exception');
                 })
-                .then(),
-            p2 = p.then(() => {output.push(lib.FAIL);}, (reason) => {output.push('p2: ' + reason.message);})
-                .then((value) => {output.push(value ? lib.FAIL : 'p2: third resolved')}),
-            p3 = p.then(null, (reason) => {
-                output.push('p3: ' + reason.message);
-                return new Promise((resolve) => {
+                .then();
+
+        p.then(() => {
+            output.push(lib.FAIL);
+        }, (reason) => {
+            output.push('p2: ' + reason.message);
+        }).then((value) => output.push(value ? lib.FAIL : 'p2: third resolved'));
+
+        p.then(null, (reason) => {
+            output.push('p3: ' + reason.message);
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve('p3: third resolved');
+                }, 20);
+            });
+        }).then((value) => {
+            output.push(value);
+            return {
+                then: (onFulfilled) => {
                     setTimeout(() => {
-                        resolve('p3: third resolved');
+                        onFulfilled('p3: forth resolved');
                     }, 20);
-                });
-            })
-                .then((value) => {
-                    output.push(value);
-                    return {
-                        then: (onFulfilled) => {
-                            setTimeout(() => {
-                                onFulfilled('p3: forth resolved');
-                            }, 20);
-                        }
-                    };
-                }, () => {output.push(lib.FAIL)})
-                .then(null, () => {output.push(lib.FAIL)})
-                .then((value) => {
-                    output.push(value);
-                    setTimeout(() => {
-                        test.array(output).is([
-                            'first rejected',
-                            'p2: second rejected by exception',
-                            'p2: third resolved',
-                            'p3: second rejected by exception',
-                            'p3: third resolved',
-                            'p3: forth resolved'
-                        ]);
-                        done();
-                    }, 0);
-                });
+                }
+            };
+        }, () => output.push(lib.FAIL))
+            .then(null, () => output.push(lib.FAIL))
+            .then((value) => {
+                output.push(value);
+                setTimeout(() => {
+                    test.array(output).is([
+                        'first rejected',
+                        'p2: second rejected by exception',
+                        'p2: third resolved',
+                        'p3: second rejected by exception',
+                        'p3: third resolved',
+                        'p3: forth resolved'
+                    ]);
+                    done();
+                }, 0);
+            });
     });
 });

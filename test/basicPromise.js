@@ -8,8 +8,8 @@ import Promise from '../src/Promise';
 describe('Test Basic Promise', () => {
     it('Fulfilled Promise', (done) => {
         var p = new Promise((resolve) => {
-                resolve('resolved');
-            });
+            resolve('resolved');
+        });
 
         p.then((value) => {
             setTimeout(() => {
@@ -23,8 +23,8 @@ describe('Test Basic Promise', () => {
 
     it('Rejected Promise', (done) => {
         var p = new Promise((resolve, reject) => {
-                reject('rejected');
-            });
+            reject('rejected');
+        });
 
         p.then(() => {
             lib.failTest(done);

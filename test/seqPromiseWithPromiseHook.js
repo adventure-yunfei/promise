@@ -11,12 +11,16 @@ describe('Test Sequenced Promise provided with hook returning promise (or thenab
         (new Promise((resolve) => {
             resolve('resolved promise');
         })).then(function onFulfilled(value) {
-                output.push(value);
-                return new Promise((resolve, reject) => {
-                    reject('second rejected');
-                });
-            }, function onRejected() {output.push(lib.FAIL);})
-            .then(function onFulfilled() {output.push(lib.FAIL);}, function onRejected(reason) {
+            output.push(value);
+            return new Promise((resolve, reject) => {
+                reject('second rejected');
+            });
+        }, function onRejected() {
+            output.push(lib.FAIL);
+        })
+            .then(function onFulfilled() {
+                output.push(lib.FAIL);
+            }, function onRejected(reason) {
                 output.push(reason);
                 return {
                     then: (success, fail) => {

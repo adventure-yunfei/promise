@@ -2,7 +2,6 @@
  * Created by yunfei on 12/21/15.
  */
 import test from 'unit.js';
-import lib from './lib';
 import Promise from '../src/Promise';
 
 describe('Test Promise.all/race shortcut', () => {
@@ -17,7 +16,7 @@ describe('Test Promise.all/race shortcut', () => {
             Promise.resolve('resolved 3'),
             {
                 then: (onFulfilled) => {
-                    setTimeout(() => onFulfilled('resolved 4'), 0)
+                    setTimeout(() => onFulfilled('resolved 4'), 0);
                 }
             }
         ]).then((values) => {
@@ -33,15 +32,14 @@ describe('Test Promise.all/race shortcut', () => {
         });
     });
 
-    it('Test Promise.all with rejected', () => {
+    it('Test Promise.race with rejected', (done) => {
         Promise.race([
             new Promise((resolve, reject) => {
                 setTimeout(() => reject('rejected 1'), 0);
             }),
             new Promise((resolve) => {
-                resolve('resolved 2');
+                setTimeout(() => resolve('resolved 2'), 0);
             }),
-            Promise.resolve('resolved 3'),
             {
                 then: (onFulfilled, onRejected) => {
                     onRejected('rejected 4');
