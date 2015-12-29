@@ -55,7 +55,7 @@ gulp.task('build-bundle', ['clean-bundle'], (done) => {
             if (isDev) {
                 gulpUtil.log('[webpack]', 'Fatal build error: \n' + buildError);
             } else {
-                throw new gulpUtil.PluginError(buildError);
+                throw new gulpUtil.PluginError('webpack', buildError);
             }
         } else {
             if (isDev) {
