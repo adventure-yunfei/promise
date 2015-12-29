@@ -8,6 +8,7 @@ A starter project to embrace incoming es6 js.
 - Webpack tuned to build one file bundle
 - Auto-Produce es5 code output when using as npm package
 - ESLint tuned to ensure better code style
+- "__assert__" keyword to enable debug check, which is similar to java "assert"
 
 # How to use it
 

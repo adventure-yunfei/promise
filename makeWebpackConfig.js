@@ -20,7 +20,7 @@ export default function makeWebpackConfig(isDev) {
             loaders: [{
                 exclude: [/node_modules/],
                 test: /\.js$/,
-                loader: 'babel'
+                loaders: ['babel', 'js-assert/webpack-assert-loader']
             }]
         },
         plugins: [
@@ -34,7 +34,6 @@ export default function makeWebpackConfig(isDev) {
             new webpack.optimize.UglifyJsPlugin({
                 compress: {
                     warnings: false,
-                    pure_funcs: null,
                     screw_ie8: true
                 }
             })
