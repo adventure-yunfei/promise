@@ -8,7 +8,7 @@
   ],
   "main": "lib/index.js",
   "scripts": {
-    "build": "gulp",
+    "prepublish": "gulp",
     "test": "mocha test --compilers js:babel/register"
   },
   "repository": {
@@ -43,6 +43,6 @@
     "yargs": "^3.31.0"
   },
   "dependencies": {
-    "js-assert": "^1.0.3"
+    "js-assert": "^2.0.1"
   }
 }
