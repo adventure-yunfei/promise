@@ -21,8 +21,9 @@ A starter project to embrace incoming es6 js.
 
 # Changes Log
 
-### [Latest](https://github.com/adventure-yunfei/es6-starter-project/compare/1.0.0...master)
+### [1.0.1](https://github.com/adventure-yunfei/es6-starter-project/compare/1.0.0...1.0.1)
 
-－ Add `__assert__` keyword to enable debug check
+- Add `__assert__` keyword to enable debug check
+- Fix: add mising npm prepublish scripts and exported files config
 
 ### [1.0.0](https://github.com/adventure-yunfei/es6-starter-project/tree/1.0.0)

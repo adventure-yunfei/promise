@@ -1,9 +1,14 @@
 {
   "name": "es6-starter-project",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ES6 starter project, containing webpack builder, gulp babel builder, etc",
-  "main": "index.js",
+  "files": [
+    "lib",
+    "bundles"
+  ],
+  "main": "lib/index.js",
   "scripts": {
+    "prepublish": "gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
