@@ -46,7 +46,7 @@ Promise.race(promises: Array.<Promise | Thenable>)
 
 # Promise Translate Utils API
 
-- Turn function using callback to function returning promise.
+###### `callback_to_promise(func, options?)`: Turn function using callback to function returning promise.
 
 API:
 ```javascript
