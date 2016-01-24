@@ -6,7 +6,7 @@ function callbackStyleFunc(a, b, error, callback) {
         const result = [a, b, this.c]
             .map((item) => item.toString())
             .join('');
-        callback && callback(error, result);
+        callback && callback(error, result, 'second data');
     });
 }
 
@@ -30,5 +30,15 @@ describe('Test callback to promise transforming', function () {
                     done();
                 });
             });
+    });
+    it('Callback with multiple data', function (done) {
+        callback_to_promise(callbackStyleFunc, {resolvedAsArray: true}).call({c: 3}, 1, 2, null)
+            .then((results) => {
+                setTimeout(() => {
+                    test.array(results).is(['123', 'second data']);
+                    done();
+                });
+            })
+            .catch(() => done(true));
     });
 });
