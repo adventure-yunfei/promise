@@ -9,7 +9,7 @@
   "main": "lib/index.js",
   "scripts": {
     "prepublish": "npm test && gulp",
-    "test": "mocha test --compilers js:babel/register"
+    "test": "mocha test/** --compilers js:babel/register"
   },
   "repository": {
     "type": "git",

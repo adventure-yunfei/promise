@@ -2,8 +2,8 @@
  * Created by yunfei on 12/9/15.
  */
 import test from 'unit.js';
-import lib from './lib';
-import Promise from '../src/Promise';
+import lib from './../lib';
+import Promise from '../../src/Promise';
 
 describe('Test Complex Promise Combination', () => {
     it('Test Promise Combination with: multi-bind for the same promise, thenable hook, reject by error, seq', (done) => {

@@ -1,6 +1,6 @@
 import test from 'unit.js';
-import lib from './lib';
-import Promise from '../src/Promise';
+import lib from './../lib';
+import Promise from '../../src/Promise';
 
 describe('Test Promise .finally', () => {
     it('Test finally for resolved promise', (done) => {

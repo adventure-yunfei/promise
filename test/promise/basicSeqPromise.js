@@ -2,8 +2,8 @@
  * Created by yunfei on 12/9/15.
  */
 import test from 'unit.js';
-import lib from './lib';
-import Promise from '../src/Promise';
+import lib from './../lib';
+import Promise from '../../src/Promise';
 
 describe('Test Basic Sequenced Promise', () => {
     it('Test two fulfilled promise seq with both hooks', (done) => {

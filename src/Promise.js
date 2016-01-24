@@ -1,5 +1,5 @@
 import __assert__ from 'js-assert/__assert__';
-import Defer from './Defer';
+import Defer from './_internal/Defer';
 
 export default class Promise {
     static resolve = (value) => new Promise((resolve) => {

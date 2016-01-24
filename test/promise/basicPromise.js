@@ -2,8 +2,8 @@
  * Created by yunfei on 9/9/15.
  */
 import test from 'unit.js';
-import lib from './lib';
-import Promise from '../src/Promise';
+import lib from './../lib';
+import Promise from '../../src/Promise';
 
 describe('Test Basic Promise', () => {
     it('Fulfilled Promise', (done) => {

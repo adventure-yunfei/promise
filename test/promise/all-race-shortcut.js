@@ -2,7 +2,7 @@
  * Created by yunfei on 12/21/15.
  */
 import test from 'unit.js';
-import Promise from '../src/Promise';
+import Promise from '../../src/Promise';
 
 describe('Test Promise.all/race shortcut', () => {
     it('Test Promise.all with all resolved', (done) => {
