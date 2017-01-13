@@ -98,7 +98,7 @@ describe('Test Basic Promise', () => {
 
     it('Async Rejected Promise', (done) => {
         var p = new Promise((resolve, reject) => {
-            setTimeout(reject('rejected'), 50);
+            setTimeout(() => reject('rejected'), 50);
         });
 
         p.then(() => {

@@ -53,6 +53,10 @@ export default class Promise {
         });
     };
 
+    static onUnhandledRejection = (reason) => {
+        throw new Error(`Unhandled promise rejection: ${reason}`);
+    };
+
     constructor(fnResolver) {
         __assert__(typeof fnResolver === 'function', 'Promise constructor only accepts a function as input');
         let stateHasPropagated = false;
@@ -60,7 +64,7 @@ export default class Promise {
         defer.then(null, (reason) => {
             setTimeout(() => {
                 if (!stateHasPropagated) {
-                    throw new Error(`Unhandled promise rejection: ${reason}`);
+                    Promise.onUnhandledRejection(reason);
                 }
             }, 1);
         });
