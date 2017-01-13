@@ -4,9 +4,9 @@
   "description": "Implementation of javascript Promise",
   "files": [
     "lib",
-    "bundles"
+    "browser-bundles"
   ],
-  "main": "lib/index.js",
+  "main": "lib/Promise.js",
   "scripts": {
     "prepublish": "npm test && gulp",
     "test": "mocha test/** --compilers js:babel/register"

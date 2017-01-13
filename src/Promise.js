@@ -1,7 +1,7 @@
 import __assert__ from 'js-assert/__assert__';
 import Defer from './_internal/Defer';
 
-export default class Promise {
+class Promise {
     static resolve = (value) => new Promise((resolve) => {
         resolve(value);
     });
@@ -120,7 +120,4 @@ export default class Promise {
     };
 }
 
-if (typeof window !== 'undefined') {
-    /* global window */
-    window.Promise = Promise;
-}
+module.exports = Promise;

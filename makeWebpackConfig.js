@@ -5,7 +5,7 @@ export default function makeWebpackConfig(isDev) {
     return {
         context: ROOT,
         entry: {
-            'promise.min': `${SRC_DIR}/index.js`
+            'promise.min': `${SRC_DIR}/Promise.js`
         },
         debug: isDev,
         devtool: isDev ? 'cheap-module-source-map' : '',
@@ -14,7 +14,8 @@ export default function makeWebpackConfig(isDev) {
             path: BUNDLE_DIR,
             filename: '[name].js',
             sourceMapFilename: '[file].[hash].map',
-            publicPath: '/build/'
+            library: 'Promise',
+            libraryTarget: 'var'
         },
         module: {
             loaders: [{
