@@ -1,10 +1,10 @@
 # Promise
 
-Implementation of javascript Promise/A+ standard.
+Implementation of javascript [Promise/A+ standard](https://promisesaplus.com/), plus `.finally` and `onUnhandledRejection`.
 
-Utils to turn things to promise.
+Nothing more. Clean and tiny (4.5 KB Only).
 
-`npm install all-promise`
+Use it by: `npm install all-promise`, or include `browser-bundles/promise.min.js`.
 
 # Promise API
 
@@ -53,34 +53,3 @@ Promise.onUnhandledRejection = function (reason) {
     // ... handle your unhandled rejection
 };
 ```
-
-# Promise Translate Utils API
-
-###### `callback_to_promise(func, options?)`: Turn function using callback to function returning promise.
-
-API:
-```javascript
-// @param func: any func that receives callback as last argument and calling callback with error as first argument)
-// @param [options]: options.resolvedAsArray (default false) means whether to resolve callback data as array. If false, only the first data is received
-callback_to_promise(func, options?)
-```
-
-Examples:
-```javascript
-////// Before transforming
-func(a, b, c, function (error, data) { ... });
-/*nodejs*/ child_process.exec('ls', function (error, stdout, stdin) { ... });
-
-////// After transforming
-callback_to_promise(func)(a, b, c)
-    .then(function (data) { ... })
-    .catch(function (error) { ... });
-/*nodejs*/ callback_to_promise(child_process.exec, {resolvedAsArray: true})('ls')
-    .then(function (dataArray) {
-        var stdout = dataArray[0];
-        var stdin = dataArray[1];
-        ...
-    })
-    .catch(function (error) { ... });
-```
-
