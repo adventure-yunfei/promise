@@ -48,7 +48,7 @@ Promise.race(promises: Array.<Promise | Thenable>)
 
 ##### Unhandled Promise Rejection
 
-```
+```javascript
 Promise.onUnhandledRejection = function (reason) {
     // ... handle your unhandled rejection
 };
