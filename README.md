@@ -4,6 +4,8 @@ Implementation of javascript Promise/A+ standard.
 
 Utils to turn things to promise.
 
+`npm install all-promise`
+
 # Promise API
 
 ##### Constructor
