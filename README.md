@@ -44,6 +44,14 @@ Promise.all(promises: Array.<Promise | Thenable>)
 Promise.race(promises: Array.<Promise | Thenable>)
 ```
 
+##### Unhandled Promise Rejection
+
+```
+Promise.onUnhandledRejection = function (reason) {
+    // ... handle your unhandled rejection
+};
+```
+
 # Promise Translate Utils API
 
 ###### `callback_to_promise(func, options?)`: Turn function using callback to function returning promise.
