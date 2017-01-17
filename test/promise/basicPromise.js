@@ -21,6 +21,28 @@ describe('Test Basic Promise', () => {
         });
     });
 
+    it('Fulfilled Promise with multiple resolve/reject', (done) => {
+        var values = [];
+        var p = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve('resolved');
+                resolve('resolved twice');
+                reject('rejected');
+                reject('rejected twice');
+            }, 0);
+        });
+
+        p.then((value) => {
+            values.push(value);
+        }, () => {
+            lib.failTest(done);
+        });
+        setTimeout(() => {
+            test.array(values).is(['resolved']);
+            done();
+        }, 50);
+    });
+
     it('Rejected Promise', (done) => {
         var p = new Promise((resolve, reject) => {
             reject('rejected');

@@ -21,7 +21,7 @@ export default function makeWebpackConfig(isDev) {
             loaders: [{
                 exclude: [/node_modules/],
                 test: /\.js$/,
-                loaders: ['babel' /*, `js-assert/webpack-assert-loader?dev=${isDev ? 'true' : 'false'}`*//*Always keep "assert" no matter production or dev*/]
+                loader: 'babel'
             }]
         },
         plugins: [

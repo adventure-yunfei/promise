@@ -1,7 +1,7 @@
 /**
  * Created by yunfei on 12/9/15.
  */
-import __assert__ from 'js-assert/__assert__';
+import __assert__ from './__assert__';
 const STATE_PENDING = 1;
 const STATE_FULFILLED = 2;
 const STATE_REJECTED = 3;
@@ -26,6 +26,9 @@ export default class Defer {
     }
 
     resolve(value) {
+        if (this.state !== STATE_PENDING) {
+            return;
+        }
         this.state = STATE_FULFILLED;
         this.output = value;
         this.fulfilledHooks.forEach((hook) => {
@@ -34,6 +37,9 @@ export default class Defer {
     }
 
     reject(reason) {
+        if (this.state !== STATE_PENDING) {
+            return;
+        }
         this.state = STATE_REJECTED;
         this.output = reason;
         this.rejectedHooks.forEach((hook) => {

@@ -1,6 +1,6 @@
 {
   "name": "beauty-promise",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Implementation of javascript Promise",
   "files": [
     "lib",
@@ -41,8 +41,5 @@
     "unit.js": "^2.0.0",
     "webpack": "^1.12.9",
     "yargs": "^3.31.0"
-  },
-  "dependencies": {
-    "js-assert": "^2.0.1"
   }
 }

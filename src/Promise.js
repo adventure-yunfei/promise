@@ -1,4 +1,4 @@
-import __assert__ from 'js-assert/__assert__';
+import __assert__ from './_internal/__assert__';
 import Defer from './_internal/Defer';
 
 class Promise {
