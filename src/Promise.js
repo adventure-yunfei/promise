@@ -2,8 +2,12 @@ import __assert__ from 'js-assert/__assert__';
 import Defer from './_internal/Defer';
 
 class Promise {
-    static resolve = (value) => new Promise((resolve) => {
-        resolve(value);
+    static resolve = (value) => new Promise((resolve, reject) => {
+        if (value && typeof value.then === 'function') {
+            value.then(resolve, reject);
+        } else {
+            resolve(value);
+        }
     });
     static reject = (reason) => new Promise((resolve, reject) => {
         reject(reason);
