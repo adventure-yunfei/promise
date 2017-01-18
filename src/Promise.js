@@ -1,6 +1,71 @@
-import __assert__ from './_internal/__assert__';
-import Defer from './_internal/Defer';
+const STATE_PENDING = 0;
+const STATE_FULFILLED = 1;
+const STATE_REJECTED = -1;
 
+function __assert__(condition, errMsg = '') {
+    if (!condition) {
+        throw new Error(errMsg || '__assert__ failed. ');
+    }
+}
+
+class InnerState {
+    state = STATE_PENDING
+    fulfilledHooks = []
+    rejectedHooks = []
+    propagated = false
+    output = null
+
+    constructor(fnResolver) {
+        __assert__(typeof fnResolver === 'function', 'InnerState constructor only accepts a function as input');
+        try {
+            fnResolver((value) => {
+                this.resolve(value);
+            }, (reason) => {
+                this.reject(reason);
+            });
+        } catch (e) {
+            this.reject(e);
+        }
+    }
+
+    resolve(value) {
+        if (this.state !== STATE_PENDING) {
+            return;
+        }
+        this.state = STATE_FULFILLED;
+        this.output = value;
+        this.fulfilledHooks.forEach((hook) => {
+            hook(value);
+        });
+    }
+
+    reject(reason) {
+        if (this.state !== STATE_PENDING) {
+            return;
+        }
+        this.state = STATE_REJECTED;
+        this.output = reason;
+        this.rejectedHooks.forEach((hook) => {
+            hook(reason);
+        });
+    }
+
+    onFinish(onFulfilled, onRejected) {
+        __assert__(!onFulfilled || typeof onFulfilled === 'function', 'InnerState.onFinish: onFulfilled must be a function');
+        __assert__(!onRejected || typeof onRejected === 'function', 'InnerState.onFinish: onRejected must be a function');
+        const {state, output, fulfilledHooks, rejectedHooks} = this;
+        if (state === STATE_PENDING) {
+            onFulfilled && fulfilledHooks.push(onFulfilled);
+            onRejected && rejectedHooks.push(onRejected);
+        } else {
+            const hook = (state === STATE_FULFILLED ? onFulfilled : onRejected);
+            hook && hook(output);
+        }
+    }
+}
+
+const KEY_INNNER_STATE = '_s';
+const KEY_STATE_HAS_PROPOGATED = '_p';
 class Promise {
     static resolve = (value) => new Promise((resolve, reject) => {
         if (value && typeof value.then === 'function') {
@@ -8,10 +73,10 @@ class Promise {
         } else {
             resolve(value);
         }
-    });
+    })
     static reject = (reason) => new Promise((resolve, reject) => {
         reject(reason);
-    });
+    })
 
     static all = (promises) => {
         __assert__(Array.isArray(promises), 'Promise.all only accepts an array as input');
@@ -38,7 +103,7 @@ class Promise {
                 });
             });
         });
-    };
+    }
 
     static race = (promises) => {
         __assert__(Array.isArray(promises), 'Promise.race only accepts an array as input');
@@ -55,73 +120,69 @@ class Promise {
                 p.then(getHandler(resolve), getHandler(reject));
             });
         });
-    };
+    }
 
     static onUnhandledRejection = (reason) => {
         throw new Error(`Unhandled promise rejection: ${reason}`);
-    };
+    }
 
     constructor(fnResolver) {
         __assert__(typeof fnResolver === 'function', 'Promise constructor only accepts a function as input');
-        let stateHasPropagated = false;
-        const defer = new Defer(fnResolver);
-        defer.then(null, (reason) => {
+        this[KEY_INNNER_STATE] = new InnerState(fnResolver);
+        this[KEY_STATE_HAS_PROPOGATED] = false;
+        this[KEY_INNNER_STATE].onFinish(null, (reason) => {
             setTimeout(() => {
-                if (!stateHasPropagated) {
+                if (!this[KEY_STATE_HAS_PROPOGATED]) {
                     Promise.onUnhandledRejection(reason);
                 }
             }, 1);
         });
-
-        this.then = (onFulfilled = null, onRejected = null) => {
-            __assert__(!onFulfilled || typeof onFulfilled === 'function', 'Promise.then: onFulfilled must be a function');
-            __assert__(!onRejected || typeof onRejected === 'function', 'Promise.then: onRejected must be a function');
-            stateHasPropagated = true;
-            return new Promise((resolve, reject) => {
-                var handleDeferOutput = (hook, output, defaultHandler) => {
-                    if (!hook) {
-                        defaultHandler(output);
-                        return;
-                    }
-                    var result;
-                    try {
-                        result = hook(output);
-                    } catch (e) {
-                        reject(e);
-                        return;
-                    }
-                    if (result === this) {
-                        reject(new TypeError('get the same promise object on chain'));
-                    } else if (result && typeof result.then === 'function') {
-                        result.then((value) => {
-                            resolve(value);
-                        }, (reason) => {
-                            reject(reason);
-                        });
-                    } else {
-                        resolve(result);
-                    }
-                };
-
-                defer.then((value) => {
-                    handleDeferOutput(onFulfilled, value, resolve);
-                }, (reason) => {
-                    handleDeferOutput(onRejected, reason, reject);
-                });
-            });
-        };
-
-        this.finally = (onFinally) => {
-            __assert__(typeof onFinally === 'function', 'Promise.finally: onFinally must be a function');
-            defer.then(onFinally, onFinally);
-            return this.then();
-        };
     }
 
-    catch = (onRejected) => {
+    then(onFulfilled = null, onRejected = null) {
+        __assert__(!onFulfilled || typeof onFulfilled === 'function', 'Promise.then: onFulfilled must be a function');
+        __assert__(!onRejected || typeof onRejected === 'function', 'Promise.then: onRejected must be a function');
+        this[KEY_STATE_HAS_PROPOGATED] = true;
+        return new Promise((resolve, reject) => {
+            var handleFinish = (hook, output, defaultHandler) => {
+                if (!hook) {
+                    defaultHandler(output);
+                    return;
+                }
+                var result;
+                try {
+                    result = hook(output);
+                } catch (e) {
+                    reject(e);
+                    return;
+                }
+                if (result === this) {
+                    reject(new TypeError('get the same promise object on chain'));
+                } else if (result && typeof result.then === 'function') {
+                    result.then(resolve, reject);
+                } else {
+                    resolve(result);
+                }
+            };
+
+            this[KEY_INNNER_STATE].onFinish((value) => {
+                handleFinish(onFulfilled, value, resolve);
+            }, (reason) => {
+                handleFinish(onRejected, reason, reject);
+            });
+        });
+    }
+
+    catch(onRejected) {
         __assert__(typeof onRejected === 'function', 'Promise.catch: onRejected must be a function');
         return this.then(null, onRejected);
-    };
+    }
+
+    finally(onFinally) {
+        __assert__(typeof onFinally === 'function', 'Promise.finally: onFinally must be a function');
+        this[KEY_INNNER_STATE].onFinish(onFinally, onFinally);
+        return this.then();
+    }
 }
 
 module.exports = Promise;
