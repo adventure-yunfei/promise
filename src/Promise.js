@@ -19,35 +19,28 @@ class InnerState {
         __assert__(typeof fnResolver === 'function', 'InnerState constructor only accepts a function as input');
         try {
             fnResolver((value) => {
-                this.resolve(value);
+                this.finish(STATE_FULFILLED, value);
             }, (reason) => {
-                this.reject(reason);
+                this.finish(STATE_REJECTED, reason);
             });
         } catch (e) {
-            this.reject(e);
+            this.finish(STATE_REJECTED, e);
         }
     }
 
-    resolve(value) {
+    finish(state, output) {
         if (this.state !== STATE_PENDING) {
             return;
         }
-        this.state = STATE_FULFILLED;
-        this.output = value;
-        this.fulfilledHooks.forEach((hook) => {
-            hook(value);
-        });
-    }
-
-    reject(reason) {
-        if (this.state !== STATE_PENDING) {
-            return;
-        }
-        this.state = STATE_REJECTED;
-        this.output = reason;
-        this.rejectedHooks.forEach((hook) => {
-            hook(reason);
-        });
+        this.state = state;
+        this.output = output;
+        setTimeout(() => {
+            (state === STATE_FULFILLED ? this.fulfilledHooks : this.rejectedHooks).forEach(hook => {
+                hook(output);
+            });
+            this.fulfilledHooks = [];
+            this.rejectedHooks = [];
+        }, 0);
     }
 
     onFinish(onFulfilled, onRejected) {
@@ -59,7 +52,7 @@ class InnerState {
             onRejected && rejectedHooks.push(onRejected);
         } else {
             const hook = (state === STATE_FULFILLED ? onFulfilled : onRejected);
-            hook && hook(output);
+            hook && setTimeout(() => hook(output), 0);
         }
     }
 }
@@ -86,7 +79,7 @@ class Promise {
             let leftResolvedCnt = promises.length;
             let finished = false;
             promises.forEach((p, idx) => {
-                p.then((value) => {
+                p.then(value => {
                     if (!finished) {
                         resolvedValues[idx] = value;
                         leftResolvedCnt--;
@@ -95,9 +88,9 @@ class Promise {
                             finished = true;
                         }
                     }
-                }, () => {
+                }, reason => {
                     if (!finished) {
-                        reject();
+                        reject(reason);
                         finished = true;
                     }
                 });
@@ -135,7 +128,7 @@ class Promise {
                 if (!this[KEY_STATE_HAS_PROPOGATED]) {
                     Promise.onUnhandledRejection(reason);
                 }
-            }, 1);
+            }, 0);
         });
     }
 
@@ -180,7 +173,8 @@ class Promise {
 
     finally(onFinally) {
         __assert__(typeof onFinally === 'function', 'Promise.finally: onFinally must be a function');
-        this[KEY_INNNER_STATE].onFinish(onFinally, onFinally);
+        const onFinallyWapper = () => onFinally();
+        this[KEY_INNNER_STATE].onFinish(onFinallyWapper, onFinallyWapper);
         return this.then();
     }
 }

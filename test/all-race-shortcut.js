@@ -1,11 +1,10 @@
-/**
- * Created by yunfei on 12/21/15.
- */
-import test from 'unit.js';
-import Promise from '../../src/Promise';
+var assert = require('assert'),
+    lib = require('./lib'),
+    Promise = lib.Promise,
+    failBranch = lib.failBranch;
 
 describe('Test Promise.all/race shortcut', () => {
-    it('Test Promise.all with all resolved', (done) => {
+    it('Promise.all with all resolved', (done) => {
         Promise.all([
             new Promise((resolve) => {
                 setTimeout(() => resolve('resolved 1'), 0);
@@ -21,18 +20,38 @@ describe('Test Promise.all/race shortcut', () => {
             }
         ]).then((values) => {
             setTimeout(() => {
-                test.array(values).is([
+                assert.deepEqual(values, [
                     'resolved 1',
                     'resolved 2',
                     'resolved 3',
                     'resolved 4'
                 ]);
                 done();
-            });
+            }, 0);
         });
     });
 
-    it('Test Promise.race with rejected', (done) => {
+    it('Promise.all with rejected', (done) => {
+        Promise.all([
+            new Promise((resolve) => {
+                setTimeout(() => resolve('resolved 1'), 0);
+            }),
+            new Promise((resolve) => {
+                resolve('resolved 2');
+            }),
+            Promise.reject('rejected 3'),
+            {
+                then: (onFulfilled) => {
+                    setTimeout(() => onFulfilled('resolved 4'), 0);
+                }
+            }
+        ]).then(failBranch(done), reason => setTimeout(() => {
+            assert.equal(reason, 'rejected 3');
+            done();
+        }, 0));
+    });
+
+    it('Promise.race with rejected', (done) => {
         Promise.race([
             new Promise((resolve, reject) => {
                 setTimeout(() => reject('rejected 1'), 0);
@@ -46,11 +65,15 @@ describe('Test Promise.all/race shortcut', () => {
                 }
             },
             Promise.reject('rejected 5')
-        ]).then(null, (reason) => {
+        ]).then(failBranch(done), reason => {
             setTimeout(() => {
-                test.string(reason).is('rejected 4');
+                assert.equal(reason, 'rejected 4');
                 done();
             });
         });
+    });
+
+    it('Dummy Wait...', done => {
+        setTimeout(done, 500);
     });
 });

@@ -38,7 +38,6 @@
     "mocha": "^2.3.4",
     "rimraf": "^2.4.4",
     "run-sequence": "^1.1.5",
-    "unit.js": "^2.0.0",
     "webpack": "^1.12.9",
     "yargs": "^3.31.0"
   }
