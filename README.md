@@ -4,7 +4,7 @@ Implementation of javascript [Promise/A+ standard](https://promisesaplus.com/), 
 
 Nothing more. Clean and tiny (4.5 KB Only).
 
-Use it by: `npm install all-promise`, or include `browser-bundles/promise.min.js`.
+Use it by: `npm install beauty-promise`, or include `browser-bundles/promise.min.js`.
 
 # Promise API
 
