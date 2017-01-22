@@ -2,7 +2,7 @@
 
 Implementation of javascript [Promise/A+ standard](https://promisesaplus.com/), plus `.finally` and `onUnhandledRejection`.
 
-Nothing more. Clean and tiny (4.5 KB Only).
+Nothing more. Clean and tiny (3.9 KB Only).
 
 Use it by: `npm install beauty-promise`, or include `browser-bundles/promise.min.js`.
 
