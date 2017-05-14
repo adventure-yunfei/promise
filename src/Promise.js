@@ -32,6 +32,13 @@ class InnerState {
         if (this.state !== STATE_PENDING) {
             return;
         }
+        if (state === STATE_FULFILLED && output && typeof output.then === 'function') {
+            output.then(
+                value => this.finish(STATE_FULFILLED, value),
+                reason => this.finish(STATE_REJECTED, reason)
+            );
+            return;
+        }
         this.state = state;
         this.output = output;
         setTimeout(() => {
@@ -61,11 +68,14 @@ const KEY_INNNER_STATE = '_s';
 const KEY_STATE_HAS_PROPOGATED = '_p';
 class Promise {
     static resolve = (value) => new Promise((resolve, reject) => {
-        if (value && typeof value.then === 'function') {
-            value.then(resolve, reject);
-        } else {
-            resolve(value);
-        }
+        const resolveValue = value => {
+            if (value && typeof value.then === 'function') {
+                value.then(resolveValue, reject);
+            } else {
+                resolve(value);
+            }
+        };
+        resolveValue(value);
     })
     static reject = (reason) => new Promise((resolve, reject) => {
         reject(reason);
